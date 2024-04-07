@@ -1,11 +1,9 @@
 package model
 
 import (
+	"net/http"
 	"shop-test/cmd/config"
-	"shop-test/model"
 	"shop-test/pkg/log"
-
-	"go.mongodb.org/mongo-driver/mongo"
 )
 
 type Controller interface {
@@ -15,7 +13,9 @@ type Controller interface {
 	Validate(i interface{}) error
 	Config() *config.Config
 	Logger() log.ILogger
+	StructToMap(obj interface{}) map[string]float32
 
 	NewPagingRequest(page, pageSize int) *PagingRequest
-	PurchaseItem(db *mongo.Database, input []model.ItemRequest, wallet []model.ResponseData) ([]model.ResponseData, error)
+	ServiceGetUser(client *http.Client, token string) (*UserResponse, error) 
+	PurchaseItem(input []*ItemRequest, users *UserResponse) ([]ResponseData, error)
 }

@@ -1,6 +1,7 @@
 package api
 
 import (
+	"fmt"
 	"net/http"
 	"shop-test/errRes"
 	"shop-test/model"
@@ -18,6 +19,34 @@ import (
 const (
 	ItemColName = "items"
 )
+
+func ApiPurchaseItem(svc model.Controller) echo.HandlerFunc {
+	return echo.HandlerFunc(func(c echo.Context) error {
+		svc.Logger().Infof("INF: ApiPurchaseItem is called")
+
+		token := c.Request().Header.Get("Authorization")
+		client := &http.Client{}
+
+		var userRes *model.UserResponse
+	
+		userRes, err := svc.ServiceGetUser(client, token)
+		if err != nil {
+			return c.JSON(http.StatusBadRequest, JsonError(http.StatusBadRequest, err.Error()))
+		}
+
+		var input []*model.ItemRequest
+		if err := c.Bind(&input); err != nil {
+			return c.JSON(http.StatusBadRequest, JsonError(http.StatusBadRequest, err.Error()))
+		}
+
+		totalSpend, err := svc.PurchaseItem(input, userRes)
+		if err != nil {
+			return c.JSON(http.StatusBadRequest, JsonError(http.StatusBadRequest, err.Error()))
+		}
+		fmt.Println(totalSpend)
+		return c.JSON(http.StatusOK, "hello")
+	})
+}
 
 func ApiListItem(svc model.Controller) echo.HandlerFunc {
 	return echo.HandlerFunc(func(c echo.Context) error {
@@ -152,4 +181,3 @@ func ApiCreateItem(svc model.Controller) echo.HandlerFunc {
 		return c.JSON(http.StatusOK, JsonSuccess("Create item successfully.", item))
 	})
 }
-

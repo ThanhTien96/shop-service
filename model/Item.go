@@ -9,21 +9,21 @@ type Currency struct {
 
 type Item struct {
 	BaseModel `bson:",inline"`
-	Name      string     `bson:"name" json:"name,omitempty"`
-	Currency  []Currency `bson:"curency" json:"currency,omitempty"`
-	Stock     int64      `bson:"stock" json:"stock,omitempty"`
+	Name      string     `bson:"name" json:"name"`
+	Currency  []Currency `bson:"currency" json:"currency"`
+	Stock     int64      `bson:"stock" json:"stock"`
 }
 
 type CreateItemRequest struct {
-	Name     string     `bson:"name" validate:"require" json:"name,omitempty"`
-	Currency []Currency `bson:"curency" validate:"require" json:"currency,omitempty"`
-	Stock    int64      `bson:"stock" validate:"require" json:"stock,omitempty"`
+	Name     string     `bson:"name,omitempty" validate:"require" json:"name,omitempty"`
+	Currency []Currency `bson:"curency,omitempty" validate:"require" json:"currency,omitempty"`
+	Stock    int64      `bson:"stock,omitempty" validate:"require" json:"stock,omitempty"`
 }
 
 
 type ItemRequest struct {
-	Id string `json:"id" validate:"required"`
-	Count int32 `json:"count" validate:"required"`
+	ItemId string `json:"item_id" validate:"required"`
+	Count int64 `json:"count" validate:"required"`
 }
 
 type PurchaseItemRequest struct {
@@ -31,9 +31,22 @@ type PurchaseItemRequest struct {
 }
 
 
+
 type ResponseData struct {
 	Currency string  `json:"currency"`
 	Amount   float32 `json:"amount"`
+}
+
+func (ireq *ItemRequest) ValidateRequest() error {
+	if ireq.ItemId == "" {
+		return fmt.Errorf("item id is required")
+	}
+
+	if ireq.Count == 0 {
+		return fmt.Errorf("count is required")
+	}
+
+	return nil
 }
 
 

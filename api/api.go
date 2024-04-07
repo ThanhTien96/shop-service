@@ -38,6 +38,7 @@ func NewApi(svc model.Controller) *Api {
 	e.POST("/item", ApiCreateItem(svc))
 	e.GET("/item/:id", ApiGetItem(svc))
 	e.GET("/item", ApiListItem(svc))
+	e.POST("/item/purchase", ApiPurchaseItem(svc))
 
 	return &Api{
 		e: e,

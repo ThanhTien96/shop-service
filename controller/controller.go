@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"reflect"
 	"sync"
 
 	"shop-test/cmd/config"
@@ -21,6 +22,7 @@ type (
 		sync.Mutex
 	}
 )
+
 
 func NewController(config *config.Config, logger log.ILogger, debug bool) *Controller {
 	validator := validator.New()
@@ -76,12 +78,38 @@ func (c *Controller) Logger() log.ILogger {
 	return c.logger
 }
 
-
 func (c *Controller) NewPagingRequest(page, pageSize int) *model.PagingRequest {
 	return &model.PagingRequest{
 		Page:     page,
 		PageSize: pageSize,
 	}
+}
+
+func (c *Controller) StructToMap(obj interface{}) map[string]float32 {
+	objValue := reflect.ValueOf(obj)
+	if objValue.Kind() != reflect.Struct {
+		panic("Input is not a struct")
+	}
+
+	result := make(map[string]float32)
+
+	for i := 0; i < objValue.NumField(); i++ {
+		field := objValue.Field(i)
+		fieldName := objValue.Type().Field(i).Tag.Get("bson")
+		if fieldName == "" {
+			fieldName = objValue.Type().Field(i).Tag.Get("json")
+		}
+		if fieldName == "" {
+			fieldName = objValue.Type().Field(i).Name
+		}
+		if field.Kind() == reflect.Float32 {
+			result[fieldName] = float32(field.Float())
+		} else {
+			panic("Field is not of type float32")
+		}
+	}
+
+	return result
 }
 
 func (c *Controller) Validate(i interface{}) error {
