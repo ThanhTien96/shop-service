@@ -1,0 +1,5 @@
+{"level":"info","ts":1712422374.3204005,"logger":"json","caller":"db/db.go:21","msg":"mongodb://thanh:thanh@localhost:27017/suntek-test?authSource=admin"}
+{"level":"info","ts":1712422374.3461192,"logger":"json","caller":"db/db.go:36","msg":"INF: MongoDB connecte successfully!."}
+{"level":"info","ts":1712422374.3463135,"logger":"json","caller":"controller/http.go:20","msg":"INF: Loading API Listener on :3000"}
+{"level":"info","ts":1712422377.527096,"logger":"json","caller":"api/api_heltchCheck.go:12","msg":"checking app."}
+{"level":"info","ts":1712422402.5663736,"logger":"json","caller":"api/api.go:50","msg":"INF: Server shutdown form port :3000"}
