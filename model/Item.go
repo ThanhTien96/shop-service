@@ -20,10 +20,20 @@ type CreateItemRequest struct {
 	Stock    int64      `bson:"stock" validate:"require" json:"stock,omitempty"`
 }
 
-type UpdateItemRequest struct {
-	Name     string     `bson:"name" json:"name,omitempty"`
-	Currency []Currency `bson:"curency" json:"currency,omitempty"`
-	Stock    int64      `bson:"stock" json:"stock,omitempty"`
+
+type ItemRequest struct {
+	Id string `json:"id" validate:"required"`
+	Count int32 `json:"count" validate:"required"`
+}
+
+type PurchaseItemRequest struct {
+	Items []ItemRequest `json:"items" validate:"required"`
+}
+
+
+type ResponseData struct {
+	Currency string  `json:"currency"`
+	Amount   float32 `json:"amount"`
 }
 
 
